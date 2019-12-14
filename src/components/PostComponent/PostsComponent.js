@@ -21,7 +21,7 @@ class PostsComponent extends Component {
         console.log(res.data)
         this.setState({ numberCom: number, spinner: false })
       })
-      .catch(err=>this.setState({error:`${err}`}))
+      .catch(err=>this.setState({error:`${err},Loading failed`}))
   }
 
   getComments = (e) => {

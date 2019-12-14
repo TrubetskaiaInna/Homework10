@@ -1,14 +1,32 @@
+// @flow
 import React, { Component } from 'react'
 import axios from 'axios'
 import UserComponent from '../UserComponent/UserComponent'
 import './MainComponent.sass'
 import SimpleSnackbar from '../MessageComponent/MessageComponent'
-
 import PostsComponent from '../PostComponent/PostsComponent'
 import CommentsComponent from '../CommentsComponent/CommentsComponent'
 
-class MainComponent extends Component {
-  constructor (props) {
+type Props = {
+  setComments: Function,
+  key: number,
+  userId: number,
+  name: string,
+  postId: number,
+  post:Object,
+  comment:Object
+}
+
+type State = {
+  users: Array<Object>,
+  posts: Array<Object>,
+  comments: Array<Object>,
+  action: boolean,
+  error: string
+}
+
+class MainComponent extends Component<Props, State> {
+  constructor (props:any) {
     super(props)
     this.state = {
       posts: [],
@@ -19,7 +37,7 @@ class MainComponent extends Component {
     }
   }
 
-  getUsers = (e) => {
+  getUsers = (e:SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault()
     axios.get(`https://jsonplaceholder.typicode.com/users`)
       .then(res => {
@@ -29,13 +47,13 @@ class MainComponent extends Component {
           action: true
         })
       })
-      .catch(err => this.setState({ error: `${err}` }))
+      .catch(err => this.setState({ error: `${err},Loading failed` }))
   }
 
-  setPosts = (posts) => {
-    this.setState({ posts, comments: [] })
+  setPosts = (posts:Object) => {
+    this.setState({  posts, comments: [] })
   }
-  setComments = (comments) => {
+  setComments = (comments:Object) => {
     this.setState({ comments })
   }
 

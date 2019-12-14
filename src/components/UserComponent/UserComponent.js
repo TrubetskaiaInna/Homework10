@@ -22,7 +22,7 @@ class UserComponent extends Component {
           action:true
         })
       })
-      .catch(err => this.setState({ error: `${err}` }))
+      .catch(err => this.setState({ error: `${err},Loading failed` }))
   }
 
   render () {
