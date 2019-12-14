@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import './PostAndCommentComponent.sass'
-import SimpleSnackbar from '../MessageComponent/MessageComponent'
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent'
+import './PostsComponent.sass'
+import axios from 'axios'
+import SimpleSnackbar from '../MessageComponent/MessageComponent'
 
-class PostAndCommentComponent extends Component {
+class PostsComponent extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      comments: [],
-      numberCom: '',
-      action: false,
       spinner: true,
-      error: ''
+      numberCom: '',
+      post: props.post || []
     }
   }
 
@@ -31,32 +29,28 @@ class PostAndCommentComponent extends Component {
     axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
       .then(res => {
         console.log(res.data)
+        this.props.setComments(res.data)
         this.setState({
-          comments: res.data,
-          action: true,
+          action:true
         })
       })
       .catch(err => this.setState({error:`${err}`}))
   }
 
   render () {
+    let { post } = this.state
     return (
       <>
-        <div className='post' onClick={this.getComments}>
-          {this.props.title}
-          {this.state.spinner ? <SpinnerComponent/> :
-            <div className='numberCom'>{this.state.numberCom} </div>}
-        </div>
-        <div className='wrapperComments'>
-          <div className='error'>{this.state.error}</div>
-          {this.state.comments.map(comment =>
-            <div className='comment' key={comment.id}> {comment.name} </div>
-          )}
-        </div>
+      <div className='post' onClick={this.getComments}>
+        <span>{post.title}</span>
+        {this.state.spinner ? <SpinnerComponent/> :
+          <div className='numberCom'>{this.state.numberCom} </div>}
+      </div>
+        <div className='error'>{this.state.error}</div>
         {this.state.action ? <SimpleSnackbar/> : null}
-      </>
+        </>
     )
   }
 }
 
-export default PostAndCommentComponent
+export default PostsComponent

@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react'
-import UsersComponent from './components/UsersComponent/UsersComponent'
+import MainComponent from './components/MainComponent/MainComponent'
 
 function App () {
   return (
     <Fragment>
-      <UsersComponent/>
+      <MainComponent/>
     </Fragment>
   )
 }

@@ -6,7 +6,7 @@ class SpinnerComponent extends Component {
   render() {
     return(
       <Loader
-        type="Rings"
+        type="Oval"
         color="#00BFFF"
         height={20}
         width={20}
