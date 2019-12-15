@@ -1,54 +1,70 @@
+// @flow
 import React, { Component } from 'react'
 import SpinnerComponent from '../SpinnerComponent/SpinnerComponent'
 import './PostsComponent.sass'
 import axios from 'axios'
 import SimpleSnackbar from '../MessageComponent/MessageComponent'
 
-class PostsComponent extends Component {
-  constructor (props) {
+type Props = {
+  postId: number,
+  setComments: Function
+}
+
+type  State = {
+  spinner: boolean,
+  numberCom: number,
+  post: Object,
+  action: boolean,
+  error: string
+}
+
+type Response = {
+  data: Array<Object>
+}
+
+class PostsComponent extends Component<Props, State> {
+  constructor (props: Object) {
     super(props)
     this.state = {
       spinner: true,
-      numberCom: '',
+      action: false,
+      numberCom: 0,
+      error: '',
       post: props.post || []
     }
   }
 
-  componentDidMount () {
-    axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
-      .then(res => {
-        let number = res.data.length
-        console.log(res.data)
-        this.setState({ numberCom: number, spinner: false })
-      })
-      .catch(err=>this.setState({error:`${err},Loading failed`}))
+  componentDidMount = async () => {
+    const response: Response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
+    try {
+      let numberComment= response.data.length
+      this.setState({ numberCom: numberComment, spinner: false })
+    } catch (err) {this.setState({ error: `${err},Loading failed` })}
   }
 
-  getComments = (e) => {
+  getComments = async (e: SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
-      .then(res => {
-        console.log(res.data)
-        this.props.setComments(res.data)
-        this.setState({
-          action:true
-        })
+    try {
+      const response: Response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
+      this.props.setComments(response.data)
+      this.setState({
+        action: true
       })
-      .catch(err => this.setState({error:`${err}`}))
+    } catch (err) { this.setState({ error: `${err},Loading failed` })}
   }
 
   render () {
-    let { post } = this.state
+    let { post, error, action, spinner, numberCom } = this.state
     return (
       <>
-      <div className='post' onClick={this.getComments}>
-        <span>{post.title}</span>
-        {this.state.spinner ? <SpinnerComponent/> :
-          <div className='numberCom'>{this.state.numberCom} </div>}
-      </div>
-        <div className='error'>{this.state.error}</div>
-        {this.state.action ? <SimpleSnackbar/> : null}
-        </>
+        <div className='post' onClick={this.getComments}>
+          <span>{post}</span>
+          {spinner ? <SpinnerComponent/> :
+            <div className='numberCom'>{numberCom} </div>}
+        </div>
+        <div className='error'>{error}</div>
+        {action ? <SimpleSnackbar/> : null}
+      </>
     )
   }
 }

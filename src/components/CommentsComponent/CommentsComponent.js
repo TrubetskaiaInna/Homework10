@@ -1,18 +1,28 @@
+// @flow
 import React, { Component } from 'react'
-import  './CommentsComponent.sass'
+import './CommentsComponent.sass'
 
-class CommentsComponent extends Component {
-  constructor (props) {
+type  Props = {
+  comment: Object
+}
+
+type State = {
+  comment: Object
+}
+
+class CommentsComponent extends Component <Props, State> {
+  constructor (props: Object) {
     super(props)
     this.state = {
       comment: props.comment || []
     }
   }
+
   render () {
     let { comment } = this.state
     return (
       <div className='comment'>
-        <span>{comment.name}</span>
+        <span>{comment}</span>
       </div>
     )
   }

@@ -1,10 +1,26 @@
+// @flow
 import React, { Component } from 'react'
 import axios from 'axios'
 import './UserComponent.sass'
 import SimpleSnackbar from '../MessageComponent/MessageComponent'
 
-class UserComponent extends Component {
-  constructor (props) {
+type Props = {
+  name: string,
+  userId: number,
+  setPosts: Function
+}
+
+type State = {
+  action: boolean,
+  error: string
+}
+
+type Response = {
+  data: Array<Object>
+}
+
+class UserComponent extends Component<Props, State> {
+  constructor (props: Object) {
     super(props)
     this.state = {
       action: false,
@@ -12,27 +28,27 @@ class UserComponent extends Component {
     }
   }
 
-  getPost = (e) => {
+  getPost = async (e: SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${this.props.userId}`)
-      .then(res => {
-        console.log(res.data)
-        this.props.setPosts(res.data)
-        this.setState({
-          action:true
-        })
+    try {
+      const response:Response = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${this.props.userId}`)
+      this.props.setPosts(response.data)
+      this.setState({
+        action: true
       })
-      .catch(err => this.setState({ error: `${err},Loading failed` }))
+    } catch (err) {this.setState({ error: `${err},Loading failed` })}
   }
 
   render () {
+    let { name } = this.props
+    let { action } = this.state
     return (
       <>
         <div className='user' onClick={this.getPost}>
-          {this.props.name}
+          <span> {name}</span>
         </div>
-          <div className='error'>{this.state.error}</div>
-          {this.state.action ? <SimpleSnackbar/> : null}
+        <div className='error'>{this.state.error}</div>
+        {action ? <SimpleSnackbar/> : null}
       </>
     )
   }
