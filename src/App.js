@@ -4,7 +4,7 @@ import MainComponent from './components/MainComponent/MainComponent'
 function App () {
   return (
     <Fragment>
-      <MainComponent/>
+      <MainComponent />
     </Fragment>
   )
 }
