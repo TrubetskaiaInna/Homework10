@@ -2,16 +2,16 @@
 import React, { Component } from 'react'
 import './CommentsComponent.sass'
 
-type  Props = {
-  comment: Object
+type Props = {
+  comment: string
 }
 
 type State = {
-  comment: Object
+  comment: Array<Object>
 }
 
 class CommentsComponent extends Component <Props, State> {
-  constructor (props: Object) {
+  constructor (props: Object = {}) {
     super(props)
     this.state = {
       comment: props.comment || []

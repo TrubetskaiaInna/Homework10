@@ -9,21 +9,46 @@ import CommentsComponent from '../CommentsComponent/CommentsComponent'
 
 type Users = {
   id: number,
-  name: string
+  name: string,
+  username: string,
+  email: string,
+  address: {
+    street: string,
+    suite: string,
+    city: string,
+    zipcode: string,
+    geo: {
+      lat: string,
+      lng: string
+    }
+  },
+  phone: string,
+  website: string,
+  company: {
+    name: string,
+    catchPhrase: string,
+    bs: string
+  }
 }
 
 type Posts = {
+  userId: number,
   id: number,
-  title: string
+  title: string,
+  body: string
 }
 
 type Comments = {
+  postId: number,
   id: number,
-  name: string
+  name: string,
+  email: string,
+  body: string
 }
 
-type Response = {
-  data: Array<Object>
+type Response<T> = {
+  data: T,
+  status: number
 }
 
 type State = {
@@ -35,7 +60,7 @@ type State = {
 }
 
 class MainComponent extends Component<{}, State> {
-  constructor (props: Object) {
+  constructor (props: Object = {}) {
     super(props)
     this.state = {
       posts: [],
@@ -46,10 +71,10 @@ class MainComponent extends Component<{}, State> {
     }
   }
 
-  getUsers = async (e: SyntheticEvent<HTMLButtonElement>) => {
+  getUsers: Function = async (e: SyntheticEvent<HTMLButtonElement>): Promise<Function> => {
     e.preventDefault()
     try {
-      const response: Response = await axios.get(`https://jsonplaceholder.typicode.com/users`)
+      const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/users`)
       this.setState({
         users: response.data,
         action: true
@@ -57,10 +82,10 @@ class MainComponent extends Component<{}, State> {
     } catch (err) {this.setState({ error: `Loading failed,${err}` })}
   }
 
-  setPosts: Function = (posts: Object) => {
+  setPosts: Function = (posts: Array<Object>): void => {
     this.setState({ posts, comments: [] })
   }
-  setComments: Function = (comments: Object) => {
+  setComments: Function = (comments: Array<Object>): void => {
     this.setState({ comments })
   }
 
@@ -89,7 +114,7 @@ class MainComponent extends Component<{}, State> {
           </div>
 
           <div className='wrapperPosts'>
-            {posts.map((post: Object) => {
+            {posts.map((post) => {
               return (
                 <PostsComponent
                   setComments={this.setComments}
@@ -101,7 +126,7 @@ class MainComponent extends Component<{}, State> {
           </div>
 
           <div className={'commentsWrapper'}>
-            {comments.map((comment: Object) => {
+            {comments.map((comment) => {
               return <CommentsComponent
                 comment={comment.name}
                 key={comment.id}/>

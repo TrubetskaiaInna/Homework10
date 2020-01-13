@@ -13,17 +13,18 @@ type Props = {
 type  State = {
   spinner: boolean,
   numberCom: number,
-  post: Object,
+  post: Array<Object>,
   action: boolean,
   error: string
 }
 
-type Response = {
-  data: Array<Object>
+type Response<T> = {
+  data: T,
+  status: number
 }
 
 class PostsComponent extends Component<Props, State> {
-  constructor (props: Object) {
+  constructor (props: Object = {}) {
     super(props)
     this.state = {
       spinner: true,
@@ -34,18 +35,18 @@ class PostsComponent extends Component<Props, State> {
     }
   }
 
-  componentDidMount = async () => {
-    const response: Response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
+  componentDidMount = async (): Promise<Function> => {
+    const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
     try {
-      let numberComment= response.data.length
+      let numberComment = response.data.length
       this.setState({ numberCom: numberComment, spinner: false })
     } catch (err) {this.setState({ error: `${err},Loading failed` })}
   }
 
-  getComments = async (e: SyntheticEvent<HTMLButtonElement>) => {
+  getComments = async (e: SyntheticEvent<HTMLButtonElement>): Promise<Function> => {
     e.preventDefault()
     try {
-      const response: Response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
+      const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
       this.props.setComments(response.data)
       this.setState({
         action: true

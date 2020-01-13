@@ -15,12 +15,13 @@ type State = {
   error: string
 }
 
-type Response = {
-  data: Array<Object>
+type Response<T> = {
+  data: T,
+  status: number
 }
 
 class UserComponent extends Component<Props, State> {
-  constructor (props: Object) {
+  constructor (props: Object = {}) {
     super(props)
     this.state = {
       action: false,
@@ -28,10 +29,10 @@ class UserComponent extends Component<Props, State> {
     }
   }
 
-  getPost = async (e: SyntheticEvent<HTMLButtonElement>) => {
+  getPost = async (e: SyntheticEvent<HTMLButtonElement>): Promise<Function> => {
     e.preventDefault()
     try {
-      const response:Response = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${this.props.userId}`)
+      const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${this.props.userId}`)
       this.props.setPosts(response.data)
       this.setState({
         action: true
