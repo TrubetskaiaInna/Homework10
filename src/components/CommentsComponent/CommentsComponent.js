@@ -7,14 +7,14 @@ type Props = {
 }
 
 type State = {
-  comment: Array<Object>
+  comment: string
 }
 
 class CommentsComponent extends Component <Props, State> {
   constructor (props: Object = {}) {
     super(props)
     this.state = {
-      comment: props.comment || []
+      comment: props.comment || ''
     }
   }
 

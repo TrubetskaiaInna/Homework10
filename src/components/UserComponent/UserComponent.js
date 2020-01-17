@@ -4,10 +4,19 @@ import axios from 'axios'
 import './UserComponent.sass'
 import SimpleSnackbar from '../MessageComponent/MessageComponent'
 
+type Posts = {
+  userId: number,
+  id: number,
+  title: string,
+  body: string
+}
+
+type setPostCallback = (Array<Posts>) => void
+
 type Props = {
   name: string,
   userId: number,
-  setPosts: Function
+  setPosts: setPostCallback
 }
 
 type State = {
@@ -29,10 +38,10 @@ class UserComponent extends Component<Props, State> {
     }
   }
 
-  getPost = async (e: SyntheticEvent<HTMLButtonElement>): Promise<Function> => {
+  getPost = async (e: SyntheticEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
     try {
-      const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${this.props.userId}`)
+      const response: Response<Array<Posts>> = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${this.props.userId}`)
       this.props.setPosts(response.data)
       this.setState({
         action: true

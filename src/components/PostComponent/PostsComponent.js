@@ -5,15 +5,25 @@ import './PostsComponent.sass'
 import axios from 'axios'
 import SimpleSnackbar from '../MessageComponent/MessageComponent'
 
+type Comments = {
+  postId: number,
+  id: number,
+  name: string,
+  email: string,
+  body: string
+}
+
+type setCommentsCallback = (Array<Comments>) => void
+
 type Props = {
   postId: number,
-  setComments: Function
+  setComments: setCommentsCallback
 }
 
 type  State = {
   spinner: boolean,
   numberCom: number,
-  post: Array<Object>,
+  post: string,
   action: boolean,
   error: string
 }
@@ -31,22 +41,22 @@ class PostsComponent extends Component<Props, State> {
       action: false,
       numberCom: 0,
       error: '',
-      post: props.post || []
+      post: props.post || ''
     }
   }
 
-  componentDidMount = async (): Promise<Function> => {
-    const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
+  componentDidMount = async (): Promise<void> => {
+    const response: Response<Array<Comments>> = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
     try {
       let numberComment = response.data.length
       this.setState({ numberCom: numberComment, spinner: false })
     } catch (err) {this.setState({ error: `${err},Loading failed` })}
   }
 
-  getComments = async (e: SyntheticEvent<HTMLButtonElement>): Promise<Function> => {
+  getComments = async (e: SyntheticEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
     try {
-      const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
+      const response: Response<Array<Comments>> = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${this.props.postId}`)
       this.props.setComments(response.data)
       this.setState({
         action: true

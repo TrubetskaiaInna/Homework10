@@ -71,10 +71,10 @@ class MainComponent extends Component<{}, State> {
     }
   }
 
-  getUsers: Function = async (e: SyntheticEvent<HTMLButtonElement>): Promise<Function> => {
+  getUsers = async (e: SyntheticEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault()
     try {
-      const response: Response<Array<Object>> = await axios.get(`https://jsonplaceholder.typicode.com/users`)
+      const response: Response<Array<Users>> = await axios.get(`https://jsonplaceholder.typicode.com/users`)
       this.setState({
         users: response.data,
         action: true
@@ -82,10 +82,10 @@ class MainComponent extends Component<{}, State> {
     } catch (err) {this.setState({ error: `Loading failed,${err}` })}
   }
 
-  setPosts: Function = (posts: Array<Object>): void => {
+  setPosts = (posts: Array<Posts>): void => {
     this.setState({ posts, comments: [] })
   }
-  setComments: Function = (comments: Array<Object>): void => {
+  setComments = (comments: Array<Comments>): void => {
     this.setState({ comments })
   }
 
